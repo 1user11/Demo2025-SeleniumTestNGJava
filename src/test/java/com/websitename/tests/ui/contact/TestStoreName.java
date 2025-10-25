@@ -1,4 +1,4 @@
-package com.websitename.tests;
+package com.websitename.tests.ui.contact;
 
 import com.websitename.base.BaseTest;
 import org.openqa.selenium.By;
