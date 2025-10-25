@@ -53,7 +53,7 @@ allure-report/
 # ===================
 # Test output (e.g., screenshots from failed UI tests)
 # ===================
-screenshots/
+# screenshots/
 
 # ===================
 # OS and Editor Swap/Backup Files
