@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Smoke Suite">
+    <test name="Smoke Tests">
+        <groups><run><include name="ui"/><include name="smoke"/></run></groups>
+        <packages>
+            <package name="com.websitename.tests.ui.auth"/>
+        </packages>
+        <classes>
+            <class name="com.websitename.tests.ui.auth.TC02_LoginUserTests_Positive"/>
+        </classes>
+    </test>
+</suite>

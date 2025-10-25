@@ -49,6 +49,7 @@ build/
 .allure/
 allure-results/
 allure-report/
+.history/
 
 # ===================
 # Test output (e.g., screenshots from failed UI tests)
