@@ -6,10 +6,10 @@
 <!--        <listener class-name="com.websitename.listeners.TestListener"/>-->
 <!--    </listeners>-->
     <test name="UI Tests - Smoke">
-<!--        <groups><run><include name="ui"/><include name="smoke"/></run></groups>-->
-<!--        <packages>-->
-<!--            <package name="com.websitename.tests.ui.auth"/>-->
-<!--        </packages>-->
+        <groups><run><include name="ui"/><include name="smoke"/></run></groups>
+        <packages>
+            <package name="com.websitename.tests.ui.auth"/>
+        </packages>
         <classes>
             <class name="com.websitename.tests.ui.auth.TC02_LoginUserTests_Positive"/>
         </classes>
