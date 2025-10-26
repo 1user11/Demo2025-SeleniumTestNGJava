@@ -11,9 +11,11 @@ pipeline {
         ALLURE_RESULTS = 'target/allure-results'
         ALLURE_REPORT = 'target/allure-report'
         ALLURE_HISTORY = 'allure-history'
+        SCREENSHOTS = 'target/screenshots'
     }
 
     stages {
+
         stage('Checkout Code') {
             steps {
                 echo "Checking out source code"
@@ -23,19 +25,23 @@ pipeline {
 
         stage('Clean') {
             steps {
-                echo "Cleaning..."
+                echo "Cleaning project"
                 bat 'mvn clean'
             }
         }
 
         stage('Run Smoke Tests') {
             steps {
-                echo "Running Smoke Tests"
-                bat 'mvn test -DsuiteXmlFile=src\\test\\resources\\testng-smoke.xml'
+                echo "Running Smoke Tests (continue even if failed)"
+                // Позволяем тестам падать, но не останавливаем pipeline
+                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                    bat 'mvn test -DsuiteXmlFile=src\\test\\resources\\testng-smoke.xml'
+                }
             }
         }
 
         stage('Copy Allure History') {
+            when { always() }
             steps {
                 echo "Copying Allure History (if any)"
                 bat '''
@@ -50,6 +56,7 @@ pipeline {
         }
 
         stage('Generate Allure Report') {
+            when { always() }
             steps {
                 echo "Generating Allure Report"
                 bat 'allure generate target\\allure-results --clean -o target\\allure-report'
@@ -57,9 +64,11 @@ pipeline {
         }
 
         stage('Archive Artifacts') {
+            when { always() }
             steps {
-                echo "Archiving Allure Report"
-                archiveArtifacts artifacts: 'target/allure-report/**/*.*', onlyIfSuccessful: true
+                echo "Archiving Allure report and screenshots"
+                archiveArtifacts artifacts: 'target/allure-report/**/*.*', onlyIfSuccessful: false
+                archiveArtifacts artifacts: 'target/screenshots/**/*.*', onlyIfSuccessful: false
             }
         }
     }
@@ -76,23 +85,22 @@ pipeline {
             '''
         }
 
-        success {
-                echo "Publishing Allure Report"
-                allure([
-                    jdk: 'JDK-17',
-                    commandline: 'allure-2.24.0',
-                    results: [[path: "target/allure-results"]],
-                    reportBuildPolicy: 'ALWAYS'
-                ])
-            }
+        always {
+            echo "Publishing Allure Report"
+            allure([
+                jdk: 'JDK-17',
+                commandline: 'allure-2.24.0',
+                results: [[path: "target/allure-results"]],
+                reportBuildPolicy: 'ALWAYS'
+            ])
+        }
 
-//                 success {
-//                     echo 'Publishing Allure Report'
-//                     allure([
-//                         includeProperties: false,
-//                         jdk: '',
-//                         results: [[path: 'target/allure-results']]
-//                     ])
-//                 }
+        failure {
+            echo "Build failed — tests or setup issue detected."
+        }
+
+        success {
+            echo "Build succeeded — all smoke tests passed."
+        }
     }
 }
