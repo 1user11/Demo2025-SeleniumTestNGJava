@@ -13,12 +13,12 @@ import org.testng.annotations.Test;
 @Owner("Oksana")
 @Link(name = "Test Cases", url = "https://automationexercise.com/test_cases")
 
-public class TC02_LoginUserTests_Positive extends BaseTest {
+public class TC02_LoginTests_Positive extends BaseTest {
 
     @Story("TC02: Login with valid credentials")
     @Severity(SeverityLevel.CRITICAL)
     @Test(groups = {"ui","login","smoke"})
-        public void login_withValidPassword() {
+        public void loginWithValidCredentials() {
 //            String email = System.getProperty("loginEmail");
 //            String password = System.getProperty("loginPassword");
             HomePage home = new HomePage(driver).open();
