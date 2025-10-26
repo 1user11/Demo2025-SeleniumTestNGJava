@@ -78,7 +78,7 @@ pipeline {
             dir("${env.PROJECT_DIR}") {
                 bat '''
                 if not exist target\\allure-report\\history (
-                    echo No history folder found in allure-report
+                    echo "No history folder found in allure-report"
                 ) else (
                     xcopy /E /I /Y target\\allure-report\\history allure-history
                 )
