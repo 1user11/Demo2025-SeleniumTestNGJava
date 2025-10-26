@@ -36,12 +36,15 @@ pipeline {
 
         stage('Copy Allure History') {
             steps {
-                echo "Copying Allure History"
+                echo "Copying Allure History (if any)"
+                // не падаем, если папки нет
                 bat '''
-                if not exist allure-history (
-                    mkdir allure-history
+                if exist allure-history (
+                    echo Copying existing history to results
+                    xcopy /E /I /Y allure-history target\\allure-results\\history
+                ) else (
+                    echo No previous history to copy
                 )
-                xcopy /E /I /Y target\\allure-results\\history allure-history
                 '''
             }
         }
@@ -65,16 +68,16 @@ pipeline {
         always {
             echo "Saving Allure History for Next Build"
             bat '''
-            if not exist target\\allure-report\\history (
-                echo "No history folder found in allure-report"
-            ) else (
+            if exist target\\allure-report\\history (
                 xcopy /E /I /Y target\\allure-report\\history allure-history
+            ) else (
+                echo No history folder found in allure-report
             )
             '''
         }
 
         success {
-            echo "Publishing Allure Report"
+            echo "🧪 Publishing Allure Report"
             allure([
                 includeProperties: false,
                 jdk: 'JDK-17',
