@@ -2,49 +2,52 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven 3.8.5'
-        jdk 'jdk17'
+        maven 'Maven_3.9.5'
+        jdk 'JDK-17'
     }
 
     environment {
-        CHROME_OPTIONS = '--headless=new --window-size=1920,1080 --disable-gpu --no-sandbox --disable-dev-shm-usage'
-        CI_RUN = 'true'
+        ALLURE_RESULTS = 'target\\allure-results'
+        ALLURE_HISTORY = 'allure-history'
+        ALLURE_REPORT = 'target\\allure-report'
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Code') {
             steps {
-                git 'https://github.com/1user11/Demo2025-SeleniumTestNGJava.git'
+                echo "📥 Checking out code..."
+                checkout scm
             }
         }
 
-        stage('Clean Workspace') {
+        stage('Clean Project') {
             steps {
-                sh 'mvn clean'
-                sh 'rm -rf screenshots || true'
-                sh 'mkdir -p screenshots'
+                dir('Demo2025-SeleniumTestNGJava') {
+                    bat 'mvn clean'
+                }
             }
         }
 
-        stage('Run Tests') {
+        stage('Run Smoke Tests') {
             steps {
-                sh 'mvn test'
+                dir('Demo2025-SeleniumTestNGJava') {
+                    bat 'mvn test -DsuiteXmlFile=src\\test\\resources\\testng-smoke.xml'
+                }
             }
         }
 
         stage('Generate Allure Report') {
             steps {
-                allure includeProperties: false, jdk: 'jdk17', results: [[path: 'target/allure-results']]
+                dir('Demo2025-SeleniumTestNGJava') {
+                    echo "📊 Generating Allure Report..."
+                    bat 'allure generate target\\allure-results --clean -o target\\allure-report'
+                }
             }
         }
-    }
 
-    post {
-        always {
-            archiveArtifacts artifacts: 'screenshots/*.png', allowEmptyArchive: true
-        }
-        failure {
-            echo 'Some tests failed.'
-        }
-    }
-}
+        stage('Copy Allure History') {
+            steps {
+                dir('Demo2025-SeleniumTestNGJava') {
+                    bat '''
+                    if exist allure-history (
+                        xcopy /s /e /y allure-history
