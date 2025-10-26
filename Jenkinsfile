@@ -4,6 +4,7 @@ pipeline {
     tools {
         maven 'Maven_3.9.5'
         jdk 'JDK-17'
+        allure 'allure-2.24.0'
     }
 
     environment {
@@ -37,7 +38,6 @@ pipeline {
         stage('Copy Allure History') {
             steps {
                 echo "Copying Allure History (if any)"
-                // не падаем, если папки нет
                 bat '''
                 if exist allure-history (
                     echo Copying existing history to results
