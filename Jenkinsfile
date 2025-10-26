@@ -4,7 +4,7 @@ pipeline {
     tools {
         maven 'Maven_3.9.5'
         jdk 'JDK-17'
-        allure 'allure-2.24.0'
+        allure 'allure_2.24.0'
     }
 
     environment {
