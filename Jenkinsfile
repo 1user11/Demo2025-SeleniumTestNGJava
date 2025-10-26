@@ -76,23 +76,23 @@ pipeline {
             '''
         }
 
-//         success {
-//                 echo "Publishing Allure Report"
-//                 allure([
-//                     jdk: 'JDK-17',
-//                     commandline: 'allure_2.24.0',
-//                     results: [[path: "target/allure-results"]],
-//                     reportBuildPolicy: 'ALWAYS'
-//                 ])
-//             }
+        success {
+                echo "Publishing Allure Report"
+                allure([
+                    jdk: 'JDK-17',
+                    commandline: 'allure-2.24.0',
+                    results: [[path: "target/allure-results"]],
+                    reportBuildPolicy: 'ALWAYS'
+                ])
+            }
 
-                success {
-                    echo 'Publishing Allure Report'
-                    allure([
-                        includeProperties: false,
-                        jdk: '',
-                        results: [[path: 'target/allure-results']]
-                    ])
-                }
+//                 success {
+//                     echo 'Publishing Allure Report'
+//                     allure([
+//                         includeProperties: false,
+//                         jdk: '',
+//                         results: [[path: 'target/allure-results']]
+//                     ])
+//                 }
     }
 }
