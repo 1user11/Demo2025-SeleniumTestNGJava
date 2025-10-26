@@ -49,7 +49,7 @@ build/
 .allure/
 allure-results/
 allure-report/
-.history/
+allure-history/
 
 # ===================
 # Test output (e.g., screenshots from failed UI tests)
