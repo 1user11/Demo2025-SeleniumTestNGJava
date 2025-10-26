@@ -6,7 +6,7 @@
             <package name="com.websitename.tests.ui.auth"/>
         </packages>
         <classes>
-            <class name="com.websitename.tests.ui.auth.TC02_LoginUserTests_Positive"/>
+            <class name="com.websitename.tests.ui.auth.TC02_LoginTests_Positive"/>
         </classes>
     </test>
 </suite>
