@@ -9,9 +9,9 @@ pipeline {
 
     environment {
         ALLURE_RESULTS = 'target/allure-results'
-        ALLURE_REPORT = 'target/allure-report'
+        ALLURE_REPORT  = 'target/allure-report'
         ALLURE_HISTORY = 'allure-history'
-        SCREENSHOTS = 'target/screenshots'
+        SCREENSHOTS    = 'target/screenshots'
     }
 
     stages {
@@ -33,8 +33,18 @@ pipeline {
         stage('Run Smoke Tests') {
             steps {
                 echo "Running Smoke Tests"
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    bat 'mvn test -DsuiteXmlFile=src\\test\\resources\\testng-smoke.xml'
+                script {
+                    def result = bat(
+                        script: 'mvn test -DsuiteXmlFile=src\\test\\resources\\testng-smoke.xml',
+                        returnStatus: true
+                    )
+                    if (result != 0) {
+                        echo "Tests failed (Maven exit code ${result})"
+                        currentBuild.result = 'UNSTABLE'
+                    } else {
+                        echo "Tests passed successfully"
+                        currentBuild.result = 'SUCCESS'
+                    }
                 }
             }
         }
@@ -55,14 +65,14 @@ pipeline {
 
         stage('Generate Allure Report') {
             steps {
-                echo "🧾 Generating Allure Report"
+                echo "Generating Allure Report"
                 bat 'allure generate target\\allure-results --clean -o target\\allure-report'
             }
         }
 
         stage('Archive Artifacts') {
             steps {
-                echo "📦 Archiving Allure report and screenshots"
+                echo "Archiving Allure report and screenshots"
                 archiveArtifacts artifacts: 'target/allure-report/**/*.*', onlyIfSuccessful: false
                 archiveArtifacts artifacts: 'target/screenshots/**/*.*', onlyIfSuccessful: false, allowEmptyArchive: true
             }
@@ -89,13 +99,16 @@ pipeline {
             ])
         }
 
+        unstable {
+            echo "Build marked as UNSTABLE — some tests failed, but pipeline completed."
+        }
+
         failure {
-            echo "Build failed — tests or setup issue detected."
+            echo "Build failed due to pipeline error or setup issue."
         }
 
         success {
-            echo "Build succeeded — all smoke tests passed."
+            echo "Build succeeded — all smoke tests passed!"
         }
     }
 }
-
