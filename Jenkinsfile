@@ -7,22 +7,24 @@ pipeline {
     }
 
     environment {
+        PROJECT_DIR = 'Demo2025-SeleniumTestNGJava'
         ALLURE_RESULTS = 'target\\allure-results'
-        ALLURE_HISTORY = 'allure-history'
         ALLURE_REPORT = 'target\\allure-report'
+        ALLURE_HISTORY = 'allure-history'
     }
 
     stages {
         stage('Checkout Code') {
             steps {
-                echo "Checking out code..."
+                echo "📥 Checking out source code"
                 checkout scm
             }
         }
 
-        stage('Clean Project') {
+        stage('Clean') {
             steps {
-                dir('Demo2025-SeleniumTestNGJava') {
+                echo "🧹 Cleaning..."
+                dir("${env.PROJECT_DIR}") {
                     bat 'mvn clean'
                 }
             }
@@ -30,24 +32,56 @@ pipeline {
 
         stage('Run Smoke Tests') {
             steps {
-                dir('Demo2025-SeleniumTestNGJava') {
+                dir("${env.PROJECT_DIR}") {
                     bat 'mvn test -DsuiteXmlFile=src\\test\\resources\\testng-smoke.xml'
-                }
-            }
-        }
-
-        stage('Generate Allure Report') {
-            steps {
-                dir('Demo2025-SeleniumTestNGJava') {
-                    echo "Generating Allure Report..."
-                    bat 'allure generate target\\allure-results --clean -o target\\allure-report'
                 }
             }
         }
 
         stage('Copy Allure History') {
             steps {
-                dir('Demo2025-SeleniumTestNGJava') {
+                dir("${env.PROJECT_DIR}") {
+                    echo "📂 Copying previous Allure history..."
                     bat '''
-                    if exist allure-history (
-                        xcopy /s /e /y allure-history
+                    if not exist allure-history (
+                        mkdir allure-history
+                    )
+                    xcopy /E /I /Y target\\allure-results\\history allure-history
+                    '''
+                }
+            }
+        }
+
+        stage('Generate Allure Report') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    echo "📊 Generating Allure Report..."
+                    bat 'allure generate target\\allure-results --clean -o target\\allure-report'
+                }
+            }
+        }
+
+        stage('Archive Allure Report') {
+            steps {
+                dir("${env.PROJECT_DIR}") {
+                    archiveArtifacts artifacts: 'target/allure-report/**/*.*', onlyIfSuccessful: true
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            dir("${env.PROJECT_DIR}") {
+                echo "💾 Saving Allure History"
+                bat '''
+                if not exist target\\allure-report\\history (
+                    echo No history folder found in allure-report
+                ) else (
+                    xcopy /E /I /Y target\\allure-report\\history allure-history
+                )
+                '''
+            }
+        }
+    }
+}
