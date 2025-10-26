@@ -80,7 +80,7 @@ pipeline {
                 echo "Publishing Allure Report"
                 allure([
                     jdk: 'JDK-17',
-                    commandline: 'Allure_2.24.0',
+                    commandline: 'allure_2.24.0',
                     results: [[path: "target/allure-results"]],
                     reportBuildPolicy: 'ALWAYS'
                 ])
