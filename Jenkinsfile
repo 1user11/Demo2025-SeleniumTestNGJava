@@ -77,13 +77,13 @@ pipeline {
         }
 
         success {
-            echo "🧪 Publishing Allure Report"
-            allure([
-                includeProperties: false,
-                jdk: 'JDK-17',
-                results: [[path: "target/allure-results"]],
-                reportBuildPolicy: 'ALWAYS'
-            ])
-        }
+                echo "Publishing Allure Report"
+                allure([
+                    jdk: 'JDK-17',
+                    commandline: 'Allure_2.24.0',
+                    results: [[path: "target/allure-results"]],
+                    reportBuildPolicy: 'ALWAYS'
+                ])
+            }
     }
 }
