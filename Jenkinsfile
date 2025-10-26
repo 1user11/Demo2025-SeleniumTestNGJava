@@ -33,7 +33,6 @@ pipeline {
         stage('Run Smoke Tests') {
             steps {
                 echo "Running Smoke Tests (continue even if failed)"
-                // Позволяем тестам падать, но не останавливаем pipeline
                 catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
                     bat 'mvn test -DsuiteXmlFile=src\\test\\resources\\testng-smoke.xml'
                 }
@@ -41,7 +40,6 @@ pipeline {
         }
 
         stage('Copy Allure History') {
-            when { always() }
             steps {
                 echo "Copying Allure History (if any)"
                 bat '''
@@ -56,7 +54,6 @@ pipeline {
         }
 
         stage('Generate Allure Report') {
-            when { always() }
             steps {
                 echo "Generating Allure Report"
                 bat 'allure generate target\\allure-results --clean -o target\\allure-report'
@@ -64,7 +61,6 @@ pipeline {
         }
 
         stage('Archive Artifacts') {
-            when { always() }
             steps {
                 echo "Archiving Allure report and screenshots"
                 archiveArtifacts artifacts: 'target/allure-report/**/*.*', onlyIfSuccessful: false
