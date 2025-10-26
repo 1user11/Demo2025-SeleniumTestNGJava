@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                echo "📥 Checking out code..."
+                echo "Checking out code..."
                 checkout scm
             }
         }
@@ -39,7 +39,7 @@ pipeline {
         stage('Generate Allure Report') {
             steps {
                 dir('Demo2025-SeleniumTestNGJava') {
-                    echo "📊 Generating Allure Report..."
+                    echo "Generating Allure Report..."
                     bat 'allure generate target\\allure-results --clean -o target\\allure-report'
                 }
             }
