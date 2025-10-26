@@ -70,6 +70,7 @@ pipeline {
     }
 
     post {
+
         always {
             echo "Saving Allure History for Next Build"
             bat '''
@@ -79,9 +80,7 @@ pipeline {
                 echo No history folder found in allure-report
             )
             '''
-        }
 
-        always {
             echo "Publishing Allure Report"
             allure([
                 jdk: 'JDK-17',
