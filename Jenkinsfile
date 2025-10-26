@@ -7,6 +7,7 @@ pipeline {
     }
 
     environment {
+        PROJECT_DIR = '.'
         ALLURE_RESULTS = 'target\\allure-results'
         ALLURE_REPORT = 'target\\allure-report'
         ALLURE_HISTORY = 'allure-history'
@@ -22,26 +23,28 @@ pipeline {
 
         stage('Clean') {
             steps {
-                echo "Cleaning..."
+                echo "Cleaning project..."
                 bat 'mvn clean'
-            }
-        }
-
-        stage('Run Smoke Tests') {
-            steps {
-                bat 'mvn test -DsuiteXmlFile=src\\test\\resources\\testng-smoke.xml'
             }
         }
 
         stage('Copy Allure History') {
             steps {
-                echo "Copying previous Allure history..."
+                echo "🕘 Copying previous Allure history..."
                 bat '''
-                if not exist allure-history (
-                    mkdir allure-history
+                if exist target\\allure-results\\history (
+                    xcopy /E /I /Y target\\allure-results\\history allure-history
+                ) else (
+                    echo "No previous Allure history to copy"
                 )
-                xcopy /E /I /Y target\\allure-results\\history allure-history
                 '''
+            }
+        }
+
+        stage('Run Smoke Tests') {
+            steps {
+                echo "Running Smoke Tests..."
+                bat 'mvn test -DsuiteXmlFile=src\\test\\resources\\testng-smoke.xml'
             }
         }
 
@@ -54,6 +57,7 @@ pipeline {
 
         stage('Archive Allure Report') {
             steps {
+                echo "Archiving Allure Report"
                 archiveArtifacts artifacts: 'target/allure-report/**/*.*', onlyIfSuccessful: true
             }
         }
@@ -61,14 +65,16 @@ pipeline {
 
     post {
         always {
-            echo "Saving Allure History"
+            echo "💾 Saving Allure History for next build"
             bat '''
-            if not exist target\\allure-report\\history (
-                echo No history folder found in allure-report
-            ) else (
+            if exist target\\allure-report\\history (
                 xcopy /E /I /Y target\\allure-report\\history allure-history
+            ) else (
+                echo "No history folder found in allure-report"
             )
             '''
+
+            archiveArtifacts artifacts: 'allure-history/**/*.*', fingerprint: true
         }
     }
 }
