@@ -24,7 +24,7 @@ public class TC02_LoginUserTests_Positive extends BaseTest {
             HomePage home = new HomePage(driver).open();
 
             home.goToSignupLogin();
-            new SignupLoginPage(driver()).login("ememdems@hotmail.com", "8XbTY@zG@wYg2hg");
+            new SignupLoginPage(driver()).login("ememdems@hotmail.com555", "8XbTY@zG@wYg2hg");
 
             home = new HomePage(driver());
 
