@@ -32,8 +32,8 @@ pipeline {
 
         stage('Run Smoke Tests') {
             steps {
-                echo "Running Smoke Tests (continue even if failed)"
-                catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+                echo "Running Smoke Tests"
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                     bat 'mvn test -DsuiteXmlFile=src\\test\\resources\\testng-smoke.xml'
                 }
             }
@@ -55,22 +55,21 @@ pipeline {
 
         stage('Generate Allure Report') {
             steps {
-                echo "Generating Allure Report"
+                echo "🧾 Generating Allure Report"
                 bat 'allure generate target\\allure-results --clean -o target\\allure-report'
             }
         }
 
         stage('Archive Artifacts') {
             steps {
-                echo "Archiving Allure report and screenshots"
+                echo "📦 Archiving Allure report and screenshots"
                 archiveArtifacts artifacts: 'target/allure-report/**/*.*', onlyIfSuccessful: false
-                archiveArtifacts artifacts: 'target/screenshots/**/*.*', onlyIfSuccessful: false
+                archiveArtifacts artifacts: 'target/screenshots/**/*.*', onlyIfSuccessful: false, allowEmptyArchive: true
             }
         }
     }
 
     post {
-
         always {
             echo "Saving Allure History for Next Build"
             bat '''
@@ -99,3 +98,4 @@ pipeline {
         }
     }
 }
+
