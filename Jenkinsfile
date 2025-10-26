@@ -7,9 +7,9 @@ pipeline {
     }
 
     environment {
-        PROJECT_DIR = '.'
-        ALLURE_RESULTS = 'target\\allure-results'
-        ALLURE_REPORT = 'target\\allure-report'
+        PROJECT_DIR = 'Demo2025-SeleniumTestNGJava'
+        ALLURE_RESULTS = 'target/allure-results'
+        ALLURE_REPORT = 'target/allure-report'
         ALLURE_HISTORY = 'allure-history'
     }
 
@@ -23,58 +23,77 @@ pipeline {
 
         stage('Clean') {
             steps {
-                echo "Cleaning project..."
-                bat 'mvn clean'
-            }
-        }
-
-        stage('Copy Allure History') {
-            steps {
-                echo "🕘 Copying previous Allure history..."
-                bat '''
-                if exist target\\allure-results\\history (
-                    xcopy /E /I /Y target\\allure-results\\history allure-history
-                ) else (
-                    echo "No previous Allure history to copy"
-                )
-                '''
+                echo "Cleaning..."
+                dir("${env.PROJECT_DIR}") {
+                    bat 'mvn clean'
+                }
             }
         }
 
         stage('Run Smoke Tests') {
             steps {
-                echo "Running Smoke Tests..."
-                bat 'mvn test -DsuiteXmlFile=src\\test\\resources\\testng-smoke.xml'
+                echo "Running Smoke Tests"
+                dir("${env.PROJECT_DIR}") {
+                    bat 'mvn test -DsuiteXmlFile=src\\test\\resources\\testng-smoke.xml'
+                }
+            }
+        }
+
+        stage('Copy Allure History') {
+            steps {
+                echo "Copying Allure History"
+                dir("${env.PROJECT_DIR}") {
+                    bat '''
+                    if not exist allure-history (
+                        mkdir allure-history
+                    )
+                    xcopy /E /I /Y target\\allure-results\\history allure-history
+                    '''
+                }
             }
         }
 
         stage('Generate Allure Report') {
             steps {
-                echo "Generating Allure Report..."
-                bat 'allure generate target\\allure-results --clean -o target\\allure-report'
+                echo "Generating Allure Report"
+                dir("${env.PROJECT_DIR}") {
+                    bat 'allure generate target\\allure-results --clean -o target\\allure-report'
+                }
             }
         }
 
-        stage('Archive Allure Report') {
+        stage('Archive Artifacts') {
             steps {
                 echo "Archiving Allure Report"
-                archiveArtifacts artifacts: 'target/allure-report/**/*.*', onlyIfSuccessful: true
+                dir("${env.PROJECT_DIR}") {
+                    archiveArtifacts artifacts: 'target/allure-report/**/*.*', onlyIfSuccessful: true
+                }
             }
         }
     }
 
     post {
         always {
-            echo "💾 Saving Allure History for next build"
-            bat '''
-            if exist target\\allure-report\\history (
-                xcopy /E /I /Y target\\allure-report\\history allure-history
-            ) else (
-                echo "No history folder found in allure-report"
-            )
-            '''
+            echo "Saving Allure History for Next Build"
+            dir("${env.PROJECT_DIR}") {
+                bat '''
+                if not exist target\\allure-report\\history (
+                    echo No history folder found in allure-report
+                ) else (
+                    xcopy /E /I /Y target\\allure-report\\history allure-history
+                )
+                '''
+            }
+        }
 
-            archiveArtifacts artifacts: 'allure-history/**/*.*', fingerprint: true
+        success {
+            echo "Publishing Allure Report"
+            allure([
+                includeProperties: false,
+                jdk: 'JDK-17',
+                results: [[path: "${env.PROJECT_DIR}/target/allure-results"]],
+                reportBuildPolicy: 'ALWAYS'
+            ])
         }
     }
 }
