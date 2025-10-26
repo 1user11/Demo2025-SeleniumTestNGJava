@@ -24,7 +24,7 @@ pipeline {
         stage('Clean') {
             steps {
                 echo "🧹 Cleaning..."
-                dir("${env.PROJECT_DIR}") {
+                dir('Demo2025-SeleniumTestNGJava') {
                     bat 'mvn clean'
                 }
             }
