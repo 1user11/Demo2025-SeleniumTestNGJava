@@ -1,0 +1,18 @@
+testRegistration:
+  email: "temp.user+%s@example.com"
+  password: "Temp@12345"
+
+prodRegistration:
+  email: "real555.account@example.com"
+  password: "StrongPass@555"
+
+login:
+  valid:
+    email: "real555.account@example.com"
+    password: "StrongPass@555"
+  invalidPassword:
+    email: "real555.account@example.com"
+    password: "WrongPass"
+  invalidEmail:
+    email: "bademail@example"
+    password: "StrongPass@555"
