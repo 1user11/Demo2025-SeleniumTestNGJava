@@ -18,6 +18,9 @@ public class HomePage extends BasePage {
     @FindBy(xpath = "//a[normalize-space()='Logout']")
     private WebElement logoutLink;
 
+    @FindBy(xpath = "//a[normalize-space()='Delete Account']")
+    private WebElement deleteAccountLink;
+
     @FindBy(xpath = "//a[normalize-space()='Products']")
     private WebElement productsLink;
 
