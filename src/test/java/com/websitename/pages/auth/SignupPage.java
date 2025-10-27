@@ -15,78 +15,61 @@ public class SignupPage extends BasePage{
     @FindBy(xpath = "//div[@id='uniform-id_gender2']")
     private WebElement titleMrs;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//input[@id='name']")
     private WebElement name;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//input[@id='password']")
     private WebElement password;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//select[@id='days']")
     private WebElement days;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//select[@id='months']")
     private WebElement months;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//select[@id='years']")
     private WebElement years;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//input[@id='first_name']")
     private WebElement firstName;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//input[@id='last_name']")
     private WebElement lastName;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//input[@id='company']")
+    private WebElement company;
+
+    @FindBy(xpath = "//input[@id='address1']")
     private WebElement address;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//input[@id='address2']")
+    private WebElement address2;
+
+    @FindBy(xpath = "//input[@id='country']")
     private WebElement country;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//input[@id='state']")
+    private WebElement state;
+
+    @FindBy(xpath = "//input[@id='city']")
     private WebElement city;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//input[@id='zipcode']")
     private WebElement zipcode;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//input[@id='mobile_number']")
     private WebElement mobileNumber;
 
-    @FindBy(xpath = "")
+    @FindBy(xpath = "//button[normalize-space()='Create Account']")
     private WebElement createAccountBtn;
 
-
-
-
-//
-//        driver.findElement(By.xpath("//a[@href='/login']")).click();
-//        driver.findElement(By.xpath("//input[@placeholder='Name']")).sendKeys("testerabcdef");
-//        driver.findElement(By.xpath("//input[@data-qa='signup-email']")).sendKeys("testerabcdef!!@test.com");
-//        driver.findElement(By.xpath("//button[@data-qa='signup-button']")).click();
-//
-//            driver.findElement(By.xpath("//div[@id='uniform-id_gender1']"));
-//            driver.findElement(By.xpath("//input[@id='password']")).sendKeys("Qwerty1230");
-//            new Select(driver.findElement(By.xpath("//select[@id='days']"))).selectByValue("5");
-//            new Select(driver.findElement(By.xpath("//select[@id='months']"))).selectByValue("5");
-//            new Select(driver.findElement(By.xpath("//select[@id='years']"))).selectByValue("1990");
-//            driver.findElement(By.id("first_name")).sendKeys("Tester");
-//            driver.findElement(By.id("last_name")).sendKeys("Qa");
-//            driver.findElement(By.id("address1")).sendKeys("Main st");
-//            driver.findElement(By.id("country")).sendKeys("United States");
-//            driver.findElement(By.id("state")).sendKeys("NJ");
-//            driver.findElement(By.id("city")).sendKeys("Paramus");
-//            driver.findElement(By.id("zipcode")).sendKeys("07005");
-//            driver.findElement(By.id("mobile_number")).sendKeys("8763458734");
-//            driver.findElement(By.xpath("//button[text()='Create Account']")).click();
-//            String actualResult = driver.findElement(By.xpath("//p[contains(text(),'Congratulations!')]")).getText();
-//            String expectedResult = "Congratulations!";
-//
-//            Assert.assertTrue(actualResult.contains(expectedResult));
-
-
-
+    String expectedResult = "Congratulations!";
 
     protected SignupPage(WebDriver driver) {
         super(driver);
     }
+
+
+
 
 }
