@@ -10,22 +10,22 @@ import org.openqa.selenium.support.FindBy;
 
 public class SignupLoginPage extends BasePage {
 
-    @FindBy(xpath = "input[data-qa='signup-name']")
+    @FindBy(xpath = "//input[@data-qa='signup-name']")
     private WebElement signupName;
 
-    @FindBy(xpath = "input[data-qa='signup-email']")
+    @FindBy(xpath = "//input[@data-qa='signup-email']")
     private WebElement signupEmail;
 
-    @FindBy(xpath = "button[data-qa='signup-button']")
+    @FindBy(xpath = "//button[@data-qa='signup-button']")
     private WebElement signupBtn;
 
-    @FindBy(xpath = "input[data-qa='login-email']")
+    @FindBy(xpath = "//input[@data-qa='login-email']")
     private WebElement loginEmail;
 
-    @FindBy(xpath = "input[data-qa='login-password']")
+    @FindBy(xpath = "//input[@data-qa='login-password']")
     private WebElement loginPassword;
 
-    @FindBy(xpath = "button[data-qa='login-button']")
+    @FindBy(xpath = "//button[@data-qa='login-button']")
     private WebElement loginBtn;
 
     @FindBy(xpath = "//p[contains(text(),'Your email or password is incorrect!')]")
