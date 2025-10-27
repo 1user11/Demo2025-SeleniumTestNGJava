@@ -14,7 +14,7 @@ public class TC01_RegistrationTests extends BaseTest {
 @Story("TC02: Registration with valid credentials")
 @Severity(SeverityLevel.CRITICAL)
 @Test(groups = {"ui","signup","smoke"})
-    public void userRegistrationWithValidCredentionals() {
+    public void userRegistrationWithValidCredentials() {
 
     }
 
