@@ -8,7 +8,7 @@ prodRegistration:
 
 login:
   valid:
-    email: "real555.account@example.com"
+    email: "real555QA.account@example.com"
     password: "StrongPass@555"
   invalidPassword:
     email: "real555.account@example.com"
